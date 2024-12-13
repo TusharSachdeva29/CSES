@@ -6,6 +6,8 @@ typedef long long ll;
 #define Tushar ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 #define endl '\n'
 #define vin(a) for (auto &x : (a)) cin >> x
+#define vin2(a) for (auto &row : (a)) for (auto &x : row) cin >> x
+
 #define vout(a) for (const auto &x : (a)) cout << x << ' '; cout << endl
 #define vpin(a) for (auto &x : (a)) cin >> x.first >> x.second
 #define vpout(a) for (const auto &x : (a)) cout << x.first << ' ' << x.second << endl
@@ -56,40 +58,31 @@ using vvi = vector<vector<int>>;
 #define MAX LLONG_MAX
 #define MIN LLONG_MIN
 
-// TIPS :-> brute force do exist like number can be 0-9 only rememnr tht qs in which 26+26^2+26^3>1000
+
 const int MOD = 1000000007;
 
 void precompute()
 {
 }
 
-// int n;
-// vvi arr;
-// vii arr(n);
-string s;string t;
-int dp[5005][5005];
+int n;int w;
+vii arr(n);
 
+int dp[101][100001];
+//w and profit
 
 inline void solve(){
-    cin>>s>>t;
-    int n=s.size();int m = t.size();
-    for(int j=0;j<m;j++){
-        dp[n][j]=m-j;
-    }
-    for(int i=0;i<n;i++){
-        dp[i][m]=n-i;
-    }
+    cin>>n>>w;arr.resize(n);
+    vpin(arr);memset(dp,0,sizeof(dp));
     for(int i=n-1;i>=0;i--){
-        for(int j=m-1;j>=0;j--){
-            if(s[i]==t[j]){
-                dp[i][j]=dp[i+1][j+1];
+        for(int j=1;j<=w;j++){
+            if(j>=arr[i].first){
+                dp[i][j]=max(dp[i+1][j],dp[i+1][j-arr[i].first]+arr[i].second);
             }
-            else {
-                dp[i][j]=min({1+dp[i+1][j],1+dp[i][j+1],1+dp[i+1][j+1]});
-            }
+            else dp[i][j]=dp[i+1][j];
         }
     }
-    cout<<dp[0][0];
+    cout<<dp[0][w];
     
 }
 
