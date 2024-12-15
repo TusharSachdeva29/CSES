@@ -64,8 +64,7 @@ void precompute()
 }
 
 int n;
-const int M = 1000005;
-int dp[M];
+int dp[6];
 
 
 inline void solve(){
@@ -73,12 +72,11 @@ inline void solve(){
     memset(dp,0,sizeof(dp));
     dp[0]=1;
     for(int i=1;i<=n;i++){
-        
-        for(int val = 1;val<=6;val++){
-            if(i-val>=0) {dp[i] += dp[(i-val)];dp[i]%=MOD;}
+        for(int val = 5;val>=1;val--){
+            if(i-val>=0) {dp[i%6] += dp[(i-val)%6];dp[i%6]%=MOD;}
         }
     }
-    cout<<dp[n]<<endl;
+    cout<<dp[n%6]<<endl;
 }
 
 int32_t main()
