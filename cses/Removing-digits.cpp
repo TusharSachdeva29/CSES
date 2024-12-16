@@ -2,7 +2,8 @@
 using namespace std;
 
 typedef long long ll;
-#define int long long
+#define int long long int 
+#define itn long long
 #define Tushar ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 #define endl '\n'
 #define vin(a) for (auto &x : (a)) cin >> x
@@ -64,19 +65,24 @@ void precompute()
 }
 
 int n;
-int dp[6];
-
+int dp[1000005];
+const int INF = 1e15;
 
 inline void solve(){
-    cin>>n;
-    memset(dp,0,sizeof(dp));
-    dp[0]=1;
-    for(int i=1;i<=n;i++){
-        for(int val = 5;val>=1;val--){
-            if(i-val>=0) {dp[i%6] += dp[(i-val)%6];dp[i%6]%=MOD;}
+    cin>>n;fill(dp,dp+n+1,INF);
+    // use fill instead of memset if want to initialize with big value , and well use fill always make a habbit
+    
+    dp[0]=0;
+    for(itn i=1;i<=n;i++){
+        itn temp = i;
+        while(temp){
+            int d = temp%10;
+            dp[i] = min(dp[i],dp[i-d]+1);
+            temp /= 10;
         }
     }
-    cout<<dp[n%6]<<endl;
+    cout<<dp[n];
+    
 }
 
 int32_t main()
