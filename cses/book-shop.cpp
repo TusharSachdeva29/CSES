@@ -28,7 +28,7 @@ typedef long long ll;
 #ifdef ONLINE_JUDGE
 #define dbg(x)
 #else
-#define debug(x) cerr << #x << " = "; _print(x); cerr << endl;
+#define debug(x) cerr << #x << " = "; _print(x); cerr << endl
 #endif
 
 void _print(int x) { cerr << x; }
@@ -67,39 +67,33 @@ void precompute()
 {
 }
 
-int n;
-vvc arr;
-// int dp[1005][1005];
+int n;int x;
+vi price;
+vi pages;
+int dp[100005];
 
+//dp[money_left] = signify max pages i can buy with that much monwy left
+// i want to buy maximum pages within x very similar to knapsack problem
 
 inline void solve(){
-    cin>>n;
-    int m = n;
-    arr.resize(n+1,vc(m+1));for(itn i=0;i<n;i++)for(itn j=0;j<m;j++) cin>>arr[i][j];
-    // memset(dp,0,sizeof(dp));
-    // vi next(n);
-    vi next(n+1,0);
+    cin>>n>>x;price.resize(n);pages.resize(n);vin(price);vin(pages);
+    fill(dp,dp+x+1,0);
 
-    // IN SPACE OPTIMIXED FILL THE LAST ROW COMPLETETY FIRST MANUALLY AND THEN PROCEED EASY UNDERSTANDING 
+    // for(itn i=1;i<=x;i++){
+    //     for(itn j=0;j<n;j++){
+    //         if(i>=price[j])dp[i] = max(dp[i],pages[j]+dp[i-price[j]]);
+    //     }
+    // }
+    
+    // ?? ** THIS IS WRONG WHICH YOU HAVE DONE ABOVE WOULD WORK IF I CAN BUY ONE BOOKS MULTIPLE TIME
+    // BUT THATS NOT THE CASE HERE , THIS IS VERY STANDARD PROBLEM O/1 KNAPSACK
+    // correct way : 
+    // When solving 0/1 knapsack problems, it's critical to ensure that each item (book) is processed independently. This is why the book loop (j) should come first, and the budget loop (i) should run in reverse for each book:
 
 
-    if(arr[n-1][m-1]!='*') next[n-1]=1;
-    for(int i=n-2;i>=0;i--){
-        if(arr[n-1][i] == '.') next[i] = next[i+1];
-        else next[i]=0;
-    }
 
-    for(int i=n-2;i>=0;i--){
-        vi curr(n+1,0);
-        for(int j=m-1;j>=0;j--){
-            if(i==n-1 and j==n-1) continue;
-            if(arr[i][j]=='*') continue;
-            curr[j]=(next[j]+curr[j+1])%MOD;
-        }
-        next = curr;
-    }
 
-    cout<<next[0];
+    cout<<dp[x];  
 }
 
 int32_t main()
