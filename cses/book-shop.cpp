@@ -70,14 +70,42 @@ void precompute()
 int n;int x;
 vi price;
 vi pages;
-int dp[100005];
+// int dp[100005];
 
 //dp[money_left] = signify max pages i can buy with that much monwy left
 // i want to buy maximum pages within x very similar to knapsack problem
 
 inline void solve(){
     cin>>n>>x;price.resize(n);pages.resize(n);vin(price);vin(pages);
-    fill(dp,dp+x+1,0);
+    // fill(dp,dp+x+1,0);
+
+    // its 2d dp [index][capacity] we can optimise it using curr and prev concept 
+
+    vi prev(x+1 ,0);
+    
+    // for(itn i=0;i<n;i++){
+    //     vi curr(x+1,0);
+    //     for(itn j=0;j<=x;j++){
+    //         if(j>=price[i]){
+    //             curr[j] = max(prev[j],prev[j-price[i]]+pages[i]);
+    //         }
+    //         else curr[j] = prev[j];
+    //     }
+    //     prev = curr;
+    // }
+
+
+
+    // we can remove the need for seperate curr by iterating  in reverse , didnt understand much 👇
+
+    for (int i = 0; i < n; i++) {
+        for (int j = x; j >= price[i]; j--) { // Iterate backwards to avoid overwriting
+            prev[j] = max(prev[j], prev[j - price[i]] + pages[i]);
+        }
+    }
+
+    
+    cout<<prev[x];    
 
     // for(itn i=1;i<=x;i++){
     //     for(itn j=0;j<n;j++){
@@ -89,11 +117,6 @@ inline void solve(){
     // BUT THATS NOT THE CASE HERE , THIS IS VERY STANDARD PROBLEM O/1 KNAPSACK
     // correct way : 
     // When solving 0/1 knapsack problems, it's critical to ensure that each item (book) is processed independently. This is why the book loop (j) should come first, and the budget loop (i) should run in reverse for each book:
-
-
-
-
-    cout<<dp[x];  
 }
 
 int32_t main()
