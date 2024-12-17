@@ -68,33 +68,19 @@ void precompute()
 }
 
 int n;
-itn dp[505][63000];
-// int f(int n,int i,int target){
-//     if(target==0){
-//         return 1;
-//     }
-//     if(i==n or target<0) return 0;
-//     if(dp[i][target]!=-1) return dp[i][target]%MOD;
-//     dp[i][target] = f(n,i+1,target-i)+f(n,i+1,target);
-//     return dp[i][target]%MOD;
-// }
-
+int dp[200005];
+vi arr;
 inline void solve(){
     cin>>n;memset(dp,0,sizeof(dp));
-    int total = n*(n+1)/2;
-    
-    if(total%2!=0) {cout<<0;return;}
-    total/=2;
-    dp[n][0] = 1;
-    for(int i=1;i<=total;i++)dp[n][i]=0;
-    for(int i=n-1;i>=0;i--){
-        for(int j=0;j<=total;j++){
-            if(j==0) dp[i][j] = 1;
-            else if(j<i) dp[i][j] = 0;
-            else dp[i][j] = (dp[i+1][j-i]+dp[i+1][j])%MOD;
+    arr.resize(n);vin(arr);
+    vi temp;temp.pb(arr[0]);
+    for(int i=1;i<n;i++){
+        if(arr[i]>temp.back()) temp.pb(arr[i]);else{
+            int ind = lower_bound(all(temp),arr[i])-temp.begin();
+            temp[ind] = arr[i];
         }
     }
-    cout<<dp[1][total]%MOD;
+    cout<<temp.size();
 }
 
 int32_t main()
