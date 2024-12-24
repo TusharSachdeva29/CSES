@@ -57,6 +57,7 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
+    "*.ndjson": "jsonl",
     "*.dbclient-js": "javascript",
     "array": "cpp",
     "deque": "cpp",
@@ -70,6 +71,7 @@
     "initializer_list": "cpp",
     "regex": "cpp",
     "valarray": "cpp",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "bitset": "cpp"
   }
 }

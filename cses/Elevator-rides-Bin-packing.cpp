@@ -2,8 +2,9 @@
 using namespace std;
 
 typedef long long ll;
-#define int long long int 
-#define itn long long
+#define itn long long  
+#define int long long int
+
 #define Tushar ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 #define endl '\n'
 #define vin(a) for (auto &x : (a)) cin >> x
@@ -27,7 +28,7 @@ typedef long long ll;
 #ifdef ONLINE_JUDGE
 #define dbg(x)
 #else
-#define dbg(x) cerr << #x << " = "; _print(x); cerr << endl
+#define debug(x) cerr << #x << " = "; _print(x); cerr << endl
 #endif
 
 void _print(int x) { cerr << x; }
@@ -45,10 +46,12 @@ template <class T, class V> void _print(map<T, V> v) { cerr << "{ "; for (const 
 
 // Common type aliases
 using vi = vector<int>;
+using vc = vector<char>;
 using vii = vector<pair<int, int>>;
 using vs = vector<string>;
 using pii = pair<int, int>;
 using vvi = vector<vector<int>>;
+using vvc = vector<vector<char>>;
 
 // Utility macros
 #define loop(a, b, i) for (int i = (a); i < (b); ++i)
@@ -64,32 +67,32 @@ void precompute()
 {
 }
 
-const int SIZE = 22;
-int grid[SIZE][SIZE],dp[SIZE][(1<<SIZE)],n;
-
-int f(itn index , int mask){
-    if(index==n) return 1;
-    if(dp[index][mask] != -1) return dp[index][mask];
-
-    int ways = 0;
-
-    for(itn i=0;i<n;i++){
-       E if(((1<<i) & mask) == 0 and grid[index][i]){
-            ways = (ways + f(index + 1,mask | (1<<i))) % MOD;
-        }
-    }
-    return dp[index][mask] = ways;
-}
+int n;int x;
 
 inline void solve(){
-    cin>>n;
-    memset(dp,-1,sizeof(dp));
-    for(int i=0;i<n;i++){
-        for(itn j=0;j<n;j++){
-            cin>>grid[i][j];
+    cin>>n>>x;
+    pair<int,int> dp[(1<<n)];// leasg number of trips aand min w8 to have a permutaion of subset in the lifts
+    vi weights(n);vin(weights);
+    dp[0] = {1,0};
+
+    for(int i=1;i<(1<<n); i++){
+        dp[i] = {MAX,MAX};
+        for(itn p=0;p<n;p++){
+            if((1<<p)&i){
+                pair<int,int> currChoice = dp[i ^ (1<<p)];
+                // min cost peromutation of all people in the subset except p
+                if(currChoice.second + weights[p] <= x){
+                    currChoice.second += weights[p];
+                }
+                else {
+                    currChoice.first++; 
+                    currChoice.second = weights[p];
+                }
+                dp[i] = min(dp[i] , currChoice);
+            }
         }
     }
-    cout<<f(0,0)<<endl;
+    cout<<dp[(1<<n)-1].first<<endl;
 }
 
 int32_t main()
