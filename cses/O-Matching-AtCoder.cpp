@@ -74,7 +74,7 @@ int f(itn index , int mask){
     int ways = 0;
 
     for(itn i=0;i<n;i++){
-       E if(((1<<i) & mask) == 0 and grid[index][i]){
+    if(((1<<i) & mask) == 0 and grid[index][i]){
             ways = (ways + f(index + 1,mask | (1<<i))) % MOD;
         }
     }
