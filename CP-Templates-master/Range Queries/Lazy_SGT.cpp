@@ -6,12 +6,13 @@ template<typename Node, typename Update>
 // node represent what are u storign in segemnt tree and u stores what is the nature of the update , majouly they are going to be integeres or sometimes pair or custom strucutre (itne aukaat nhi h mere)
 #define ll long long 
 struct LazySGT {
+    // we have 3 segment trees 
     vector<Node> tree;
-    vector<bool> lazy;// make if a node has pendign updatae
+    vector<bool> lazy;// make if a node has pendign updatae , if its trur then some update will be present that need to be apply 
     vector<Update> updates;// store pending updates for lazy propogation
     vector<ll> arr; // type may change
-    int n;
-    int s;
+    int n; // size of actuall array 
+    int s; // sizes of segment tree
     LazySGT(int a_len, vector<ll> &a) { // change if type updated
         arr = a;
         n = a_len;
@@ -35,9 +36,15 @@ struct LazySGT {
         tree[index].merge(tree[2 * index], tree[2 * index + 1]);
     }
     // pushes the lazy update from a node to its children , resets the current nodes lazy status
+
+
+    //lazy[index] = 1 , means some changes are need to be oushed downn
+
     void pushdown(int index, int start, int end){
+        // checkin some pending changes 
         if(lazy[index]){
             int mid = (start + end) / 2;
+            // apply the changes 
             apply(2 * index, start, mid, updates[index]);
             apply(2 * index + 1, mid + 1, end, updates[index]);
             updates[index] = Update();
@@ -53,13 +60,18 @@ struct LazySGT {
         u.apply(tree[index], start, end);
     }
     //
-    void update(int start, int end, int index, int left, int right, Update& u) {  // Never Change this
+    void update(int start, int end, int index, int left, int right, Update& u) {  // Never Change this,
+        // complete overlap , disjoint , partial overlap 
+
+        // disjoint 
         if(start > right || end < left)
             return;
+        // complete overlap
         if(start >= left && end <= right){
             apply(index, start, end, u);
             return;
         }
+        // here i am assuming current node is is the most update state and i   pushdown current changes to left and right so we are making sure when we are going to left and right , they will be in teh most updated state , we dont only push down but also apply ut 
         pushdown(index, start, end);
         int mid = (start + end) / 2;
         update(start, mid, 2 * index, left, right, u);
@@ -70,7 +82,7 @@ struct LazySGT {
         if (start > right || end < left)
             return Node();
         if (start >= left && end <= right){
-            pushdown(index, start, end);
+            pushdown(index, start, end); // even if you comm it out it will work , its in updated state only 
             return tree[index];
         }
         pushdown(index, start, end);
@@ -109,7 +121,7 @@ struct Node1 {
 struct Update1 {
     ll val; // may change
     Update1(){ // Identity update
-        val = 0;
+        val = -1;
     }
     Update1(ll val1) { // Actual Update
         val = val1;
@@ -117,6 +129,7 @@ struct Update1 {
     // function which apply update to an node 
 
     void apply(Node1 &a, int start, int end) { // apply update to given node
+        if(val == -1) return;
         a.val = val * (end - start + 1); // may change
         // if increment range by value
     }
@@ -125,3 +138,9 @@ struct Update1 {
         val = new_update.val;
     }
 };
+// we can make muktilple segemttn tree just make another node and update 
+
+void solve(){
+    int n = 4;
+
+}

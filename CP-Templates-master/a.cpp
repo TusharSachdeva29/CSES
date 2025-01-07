@@ -19,6 +19,7 @@ typedef int ll;
 #define yes cout << "YES" << endl
 #define no cout << "NO" << endl
 #define debug(x) cerr << #x << " = " << x << endl
+#define show(x) cerr << #x << ": "; debug_segtree(x); cerr << endl
 // #define r(x) { cout << x << endl; return; }
 #define setbits(x) __builtin_popcountll(x)
 #define zerobits(x) __builtin_ctzll(x)
@@ -41,6 +42,10 @@ template <class T> void _print(vector<T> v) { cerr << "[ "; for (const auto &x :
 template <class T> void _print(set<T> v) { cerr << "{ "; for (const auto &x : v) { _print(x); cerr << " "; } cerr << "}"; }
 template <class T> void _print(multiset<T> v) { cerr << "{ "; for (const auto &x : v) { _print(x); cerr << " "; } cerr << "}"; }
 template <class T, class V> void _print(map<T, V> v) { cerr << "{ "; for (const auto &x : v) { _print(x); cerr << " "; } cerr << "}"; }
+template<typename T>
+void __print(const T &x) { cerr << x; }
+void __print(const string &x) { cerr << '"' << x << '"'; }
+
 
 using vi = vector<int>;
 using vii = vector<pair<int, int>>;
@@ -55,83 +60,128 @@ using vvi = vector<vector<int>>;
 #define MIN LLONG_MIN
 
 const int MOD = 1000000007;
+#define ll long long 
 
-void precompute() {}
-int ceil(itn n,int k){
-    return (n+k-1)/k;
-}
+template<typename Node, typename Update>
+struct SegTree {
+	vector<Node> tree;
+	vector<ll> arr;
+	int n;
+	int s;
+	SegTree(int a_len, vector<ll> &a) {
+		arr = a;
+		n = a_len;
+		s = 1;
+		while(s < 2 * n){
+			s = s << 1;
+		}
+		tree.resize(s); 
+		fill(tree.begin(), tree.end(), Node());
+		build(0, n - 1, 1);
+	}
+	void build(int start, int end, int index) {
+		if (start == end) {
+			tree[index] = Node(arr[start]);
+			return;
+		}
+		int mid = (start + end) / 2;
+		build(start, mid, 2 * index);
+		build(mid + 1, end, 2 * index + 1);
+		tree[index].merge(tree[2 * index], tree[2 * index + 1]);
+	}
+	void update(int start, int end, int index, int query_index, Update &u) {
+		if (start == end) {
+			u.apply(tree[index]);
+			return;
+		}
+		int mid = (start + end) / 2;
+		if (mid >= query_index)
+			update(start, mid, 2 * index, query_index, u);
+		else
+			update(mid + 1, end, 2 * index + 1, query_index, u);
+		tree[index].merge(tree[2 * index], tree[2 * index + 1]);
+	}
+	Node query(int start, int end, int index, int left, int right) {
+		if (start > right || end < left)
+			return Node();
+		if (start >= left && end <= right)
+			return tree[index];
+		int mid = (start + end) / 2;
+		Node l, r, ans;
+		l = query(start, mid, 2 * index, left, right);
+		r = query(mid + 1, end, 2 * index + 1, left, right);
+		ans.merge(l, r);
+		return ans;
+	}
+	void make_update(int index, ll val) {
+		Update new_update = Update(val);
+		update(0, n - 1, 1, index, new_update);
+	}
+	Node make_query(int left, int right) {
+		return query(0, n - 1, 1, left, right);
+	}
+};
+
+struct Node1 {
+	ll val;
+	ll count;
+	Node1() {
+		val = MAX;
+		count = 0;
+	}
+	Node1(ll p1) {
+		val = p1;
+		count = 1;
+	}
+	void merge(Node1 &l, Node1 &r) {
+		if(l.val<r.val){
+			val = l.val;
+			count = l.count;
+		}else if(l.val>r.val){
+			val = r.val;
+			count = r.count;
+		}else{
+			val = l.val;
+			count = l.count + r.count;
+		}
+	}
+};
+struct Update1 {
+	ll val;
+	Update1(ll p1) {
+		val = p1;
+	}
+	void apply(Node1 &a) {
+		a.val = val;
+		a.count = 1;
+	}
+};
+
+
+
 void solve() {
-    read(n);vi arr(n);vin(arr);
-    int cnt = 0;isort(arr);
-    int i =0;int j =n-1;int x = 0;
-    debug(arr)
-    while(i<j){
-        // debug(i);debug(j);debug(x);
-        // if(arr[i]==0)
-        // debug(cnt)debug(x)
-        if(x>=arr[j]){
-            j--;
-            x = 0;
-            cnt++;
-        }
-        else if(arr[i]==1) {
-            i++;x++;cnt++;
-        }
-        else {
-            int req = arr[j] - x;
-            if(arr[i]>=req){
-                // if(i==3) cout<<"maaa";
-                arr[i]-=req;
-                j--;
-                x= 0;
-                cnt+=req+1;
-                if(arr[i]==0) i++;
-            }
-            else {
-                x+=arr[i];
-                // arr[i] = 0;
-                // if(i==3) cout<<"maaa"<<cnt<<endl;
-                // cout
-                cnt+=arr[i];
-                i++;
-                // cout<<cnt<<endl;
-            }
-        }
-    }  
-    debug(cnt)
-    int req = arr[i] - x;
-    cnt += req/2;
-    x+=req/2;
-    arr[i] -= req/2;
-    if(arr[i]>0){
-        arr[i]-=x;
-        cnt ++ ;
+    read(n);read(m);
+    vi arr(n);vin(arr);
+	SegTree<Node1 , Update1> seg = SegTree<Node1 , Update1>(n,arr);
+    
+    for(int i=0;i<m;i++){
+        read(k);read(l);read(r);
+	
+        if(k==1){
+			seg.make_update(l,r);
+		}else{
+			cout<<seg.make_query(l,r-1).val<<" "<<seg.make_query(l,r-1).count<<endl;
+		}
     }
-    cnt+=arr[i];
-    cout<<cnt<<endl; 
 }
 
 int32_t main() {
     Tushar;
-    precompute();
+    // precompute();
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }
     return 0;
 }
-
-    //     map<int,long long> mp; 
-    //     for(auto e : coins) {
-    //         int l = e[0], r=e[1], c=e[2];
-    //         mp[l]+=c;
-    //         mp[r+1]-=c;
-    //     }
-        
-    //     long long sumi = 0;
-    //     vector<pair<int, long long>> pre;
-    //     for (auto [pos, value] : mp) {
-    //         sumi+=value;
-    //         pre.push_back({pos, sumi});
-    //     }

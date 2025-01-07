@@ -91,6 +91,7 @@ struct SegTree {
 
 // range sum querise of sqyares of all values in a rang -> we will be storing sum of squares
 struct Node1 {
+
 	ll val; // may change
 	// ll index; if index also needed
 	Node1() { // Identity element
@@ -127,7 +128,8 @@ struct Update1 {
 		// for inc it would be a.val+=val;
 		// for min it would be a.val = val 
 		// for change ti would be also a.val = val 
-	}
+		// for gcd a.val = a.val - val doubt why '-'
+	} 
 };
 
 
