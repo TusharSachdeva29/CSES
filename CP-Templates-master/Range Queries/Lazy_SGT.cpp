@@ -1,13 +1,14 @@
-// Credits to HealthyUG for the inspiration.
 // Lazy Segment Tree with Range Updates and Range Queries
 // Supports multiple Segment Trees with just a change in the Node and Update
 // Very few changes required everytime
 
 template<typename Node, typename Update>
+// node represent what are u storign in segemnt tree and u stores what is the nature of the update , majouly they are going to be integeres or sometimes pair or custom strucutre (itne aukaat nhi h mere)
+#define ll long long 
 struct LazySGT {
     vector<Node> tree;
-    vector<bool> lazy;
-    vector<Update> updates;
+    vector<bool> lazy;// make if a node has pendign updatae
+    vector<Update> updates;// store pending updates for lazy propogation
     vector<ll> arr; // type may change
     int n;
     int s;
@@ -33,6 +34,7 @@ struct LazySGT {
         build(mid + 1, end, 2 * index + 1);
         tree[index].merge(tree[2 * index], tree[2 * index + 1]);
     }
+    // pushes the lazy update from a node to its children , resets the current nodes lazy status
     void pushdown(int index, int start, int end){
         if(lazy[index]){
             int mid = (start + end) / 2;
@@ -42,6 +44,7 @@ struct LazySGT {
             lazy[index] = 0;
         }
     }
+    // applies an update to the current nod e, if its not a leaf , marks it as lazy and store the update for future propogation 
     void apply(int index, int start, int end, Update& u){
         if(start != end){
             lazy[index] = 1;
@@ -49,6 +52,7 @@ struct LazySGT {
         }
         u.apply(tree[index], start, end);
     }
+    //
     void update(int start, int end, int index, int left, int right, Update& u) {  // Never Change this
         if(start > right || end < left)
             return;
@@ -96,6 +100,9 @@ struct Node1 {
     }
     void merge(Node1 &l, Node1 &r) { // Merge two child nodes
         val = l.val + r.val;  // may change
+        //identifier max undefined aa rha ha check kro
+        // val = max(l.val, r.val); // may change
+        // val - gcd(l.val, r.val); // may change
     }
 };
 
@@ -107,9 +114,13 @@ struct Update1 {
     Update1(ll val1) { // Actual Update
         val = val1;
     }
+    // function which apply update to an node 
+
     void apply(Node1 &a, int start, int end) { // apply update to given node
         a.val = val * (end - start + 1); // may change
+        // if increment range by value
     }
+    // it combines the result of two node in teh segment tree
     void combine(Update1& new_update, int start, int end){
         val = new_update.val;
     }

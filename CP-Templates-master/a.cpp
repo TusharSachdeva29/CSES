@@ -19,7 +19,7 @@ typedef int ll;
 #define yes cout << "YES" << endl
 #define no cout << "NO" << endl
 #define debug(x) cerr << #x << " = " << x << endl
-#define r(x) { cout << x << endl; return; }
+// #define r(x) { cout << x << endl; return; }
 #define setbits(x) __builtin_popcountll(x)
 #define zerobits(x) __builtin_ctzll(x)
 
@@ -57,15 +57,58 @@ using vvi = vector<vector<int>>;
 const int MOD = 1000000007;
 
 void precompute() {}
-
+int ceil(itn n,int k){
+    return (n+k-1)/k;
+}
 void solve() {
-    read(n);vector<int> helper(2*n+5,0);
-    for(itn i=0;i<n;i++){
-        read(l);read(r);
-        if(l==r){
-
+    read(n);vi arr(n);vin(arr);
+    int cnt = 0;isort(arr);
+    int i =0;int j =n-1;int x = 0;
+    debug(arr)
+    while(i<j){
+        // debug(i);debug(j);debug(x);
+        // if(arr[i]==0)
+        // debug(cnt)debug(x)
+        if(x>=arr[j]){
+            j--;
+            x = 0;
+            cnt++;
         }
+        else if(arr[i]==1) {
+            i++;x++;cnt++;
+        }
+        else {
+            int req = arr[j] - x;
+            if(arr[i]>=req){
+                // if(i==3) cout<<"maaa";
+                arr[i]-=req;
+                j--;
+                x= 0;
+                cnt+=req+1;
+                if(arr[i]==0) i++;
+            }
+            else {
+                x+=arr[i];
+                // arr[i] = 0;
+                // if(i==3) cout<<"maaa"<<cnt<<endl;
+                // cout
+                cnt+=arr[i];
+                i++;
+                // cout<<cnt<<endl;
+            }
+        }
+    }  
+    debug(cnt)
+    int req = arr[i] - x;
+    cnt += req/2;
+    x+=req/2;
+    arr[i] -= req/2;
+    if(arr[i]>0){
+        arr[i]-=x;
+        cnt ++ ;
     }
+    cnt+=arr[i];
+    cout<<cnt<<endl; 
 }
 
 int32_t main() {
@@ -78,3 +121,17 @@ int32_t main() {
     }
     return 0;
 }
+
+    //     map<int,long long> mp; 
+    //     for(auto e : coins) {
+    //         int l = e[0], r=e[1], c=e[2];
+    //         mp[l]+=c;
+    //         mp[r+1]-=c;
+    //     }
+        
+    //     long long sumi = 0;
+    //     vector<pair<int, long long>> pre;
+    //     for (auto [pos, value] : mp) {
+    //         sumi+=value;
+    //         pre.push_back({pos, sumi});
+    //     }
