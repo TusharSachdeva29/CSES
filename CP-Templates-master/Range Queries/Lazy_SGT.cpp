@@ -111,7 +111,7 @@ struct Node1 {
         val = p1; // may change
     }
     void merge(Node1 &l, Node1 &r) { // Merge two child nodes
-        val = l.val + r.val;  // may change
+        val = l.val ^ r.val;  // may change
         //identifier max undefined aa rha ha check kro
         // val = max(l.val, r.val); // may change
         // val - gcd(l.val, r.val); // may change
@@ -121,16 +121,17 @@ struct Node1 {
 struct Update1 {
     ll val; // may change
     Update1(){ // Identity update
-        val = -1;
+        val = 0;
     }
     Update1(ll val1) { // Actual Update
-        val = val1;
+        val = 1-val1;
     }
     // function which apply update to an node 
 
     void apply(Node1 &a, int start, int end) { // apply update to given node
         if(val == -1) return;
         a.val = val * (end - start + 1); // may change
+        
         // if increment range by value
     }
     // it combines the result of two node in teh segment tree

@@ -90,6 +90,7 @@ struct SegTree {
 //min(x,i) -> x , in this case i should be infinity
 
 // range sum querise of sqyares of all values in a rang -> we will be storing sum of squares
+// int sumi = accumulate(all(arr),0ll);
 struct Node1 {
 
 	ll val; // may change
@@ -105,7 +106,8 @@ struct Node1 {
 	}
 	// whatever operation u want to do define hered 
 	void merge(Node1 &l, Node1 &r) { // Merge two child nodes
-		val = l.val ^ r.val;  // may change
+		// val = l.val ^ r.val;  // may change
+		val = l.val+r.val;
 		// if(l.val<r.val){
 		// 	val = l.val;
 		// 	index = l.index;

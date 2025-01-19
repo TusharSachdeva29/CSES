@@ -87,11 +87,11 @@ struct Update1 {
 };
 
 void solve(){
-	int n = 4;
-	vector<ll> arr = {1, 2, 3, 4};
+	read(n);vi arr(n);vin(arr);
 	SegTree<Node1, Update1> seg = SegTree<Node1, Update1>(n, arr);
-	Node1 ans = seg.make_query(0, 3);
-	cout << ans.val << endl;
-	seg.make_update(2, 10);
-	cout << seg.make_query(2, 2).val << endl;
+	// Node1 ans = seg.make_query(0, 3);
+	// cout << ans.val << endl;
+	// seg.make_update(2, 10);
+	// cout << seg.make_query(2, 2).val << endl;
+	
 }
